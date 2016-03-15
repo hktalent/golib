@@ -12,7 +12,7 @@ import (
 var (
 	mysqlConn *sql.DB
 	username  string = "root"
-	passwd    string = "123456"
+	passwd    string = ""
 )
 
 func init() {
