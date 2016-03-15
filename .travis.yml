@@ -12,7 +12,7 @@ install:
     - go get github.com/go-sql-driver/mysql
 
 before_script:
-    - mysql -u root -e 'create database IF NOT EXISTS test'
+    - mysql -u root -e 'create database IF NOT EXISTS golib_test'
 
 script:
     - go test -v ./...
