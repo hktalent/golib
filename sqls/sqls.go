@@ -70,23 +70,23 @@ func (s *SqlWrap) ExecTx(tx *sql.Tx, sql string, params ...interface{}) (res sql
 }
 
 func (s *SqlWrap) Query(sql string, params ...interface{}) (rows *sql.Rows, err error) {
-    if s.db == nil {
+	if s.db == nil {
 		return rows, fmt.Errorf("db connection is nil")
 	}
 
-    stmtOuts, err := s.db.Prepare(sql)
-    if err != nil {
-        return rows, err
-    }
-    defer stmtOuts.Close()
+	stmtOuts, err := s.db.Prepare(sql)
+	if err != nil {
+		return rows, err
+	}
+	defer stmtOuts.Close()
 
-    rows, err = stmtOuts.Query(
-        params...,
-    )
-    if err != nil {
-        return rows, err
-    }
-    defer rows.Close()
-    
-    return rows, nil
+	rows, err = stmtOuts.Query(
+		params...,
+	)
+	if err != nil {
+		return rows, err
+	}
+	defer rows.Close()
+
+	return rows, nil
 }

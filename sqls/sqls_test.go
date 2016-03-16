@@ -64,28 +64,28 @@ func TestInsertTx(t *testing.T) {
 }
 
 func TestQuery(t *testing.T) {
-    db := &SqlWrap{db: mysqlConn}
-    sql := "SELECT id, name FROM users WHERE name = ?"
+	db := &SqlWrap{db: mysqlConn}
+	sql := "SELECT id, name FROM users WHERE name = ?"
 
-    rows, err := db.Query(sql, "test")
-    if err != nil {
-        t.Fatalf("query db error, %v", err)
-    }
-    defer rows.Close()
+	rows, err := db.Query(sql, "test")
+	if err != nil {
+		t.Fatalf("query db error, %v", err)
+	}
+	defer rows.Close()
 
-    var id int64
-    var name string
-    for rows.Next() {
-        rows.Scan(
-            &id,
-            &name,
-        )
-        t.Logf("query db, id: %d, name: %s", id, name)
-    }
-    err = rows.Err()
-    if err != nil {
-        t.Fatalf("query db error, %v", err)
-    }
+	var id int64
+	var name string
+	for rows.Next() {
+		rows.Scan(
+			&id,
+			&name,
+		)
+		t.Logf("query db, id: %d, name: %s", id, name)
+	}
+	err = rows.Err()
+	if err != nil {
+		t.Fatalf("query db error, %v", err)
+	}
 }
 
 func TestDropTable(t *testing.T) {
