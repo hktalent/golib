@@ -10,8 +10,8 @@ import (
 
 var (
 	db        *SqlWrap
-	username  string = "root"   // your mysql username for test
-	passwd    string = "123456" // your mysql password for test
+	username  string = "root" // your mysql username for test
+	passwd    string = ""     // your mysql password for test
 	insertNum int64  = 100
 )
 
@@ -25,12 +25,12 @@ func init() {
 
 	// you can also use sql.Open and then assign to SqlWrap
 	/*
-	    mysqlConn, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/golib_test", username, passwd))
-		if err != nil {
-			fmt.Printf("connect to mysql error\n")
-			os.Exit(1)
-		}
-	    db = &SqlWrap{db: mysqlConn}
+		    mysqlConn, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/golib_test", username, passwd))
+			if err != nil {
+				fmt.Printf("connect to mysql error\n")
+				os.Exit(1)
+			}
+		    db = &SqlWrap{db: mysqlConn}
 	*/
 }
 
