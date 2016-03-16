@@ -87,3 +87,12 @@ func TestQuery(t *testing.T) {
         t.Fatalf("query db error, %v", err)
     }
 }
+
+func TestDropTable(t *testing.T) {
+	db := &SqlWrap{db: mysqlConn}
+	sql := "DROP TABLE users"
+	_, err := db.Exec(sql)
+	if err != nil {
+		t.Fatalf("drop table error, %v", err)
+	}
+}
