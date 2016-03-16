@@ -65,7 +65,7 @@ func TestInsertTx(t *testing.T) {
 
 func TestQuery(t *testing.T) {
     db := &SqlWrap{db: mysqlConn}
-    sql := "SELECT (id, name) FROM users WHERE name = ?"
+    sql := "SELECT id, name FROM users WHERE name = ?"
 
     rows, err := db.Query(sql, "test")
     if err != nil {
