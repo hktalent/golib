@@ -53,7 +53,7 @@ func TestInsertTx(t *testing.T) {
 	}
 
 	for i := 0; i < 5; i++ {
-		_, err := db.ExecTx(tx, sql, fmt.Sprintf("test%d", i))
+		_, err := db.ExecTx(tx, sql, "test")
 		if err != nil {
 			db.Rollback(tx)
 			t.Fatalf("tx insert into db error, %v", err)
@@ -61,4 +61,29 @@ func TestInsertTx(t *testing.T) {
 	}
 
 	db.Commit(tx)
+}
+
+func TestQuery(t *testing.T) {
+    db := &SqlWrap{db: mysqlConn}
+    sql := "SELECT (id, name) FROM users WHERE name = ?"
+
+    rows, err := db.Query(sql, "test")
+    if err != nil {
+        t.Fatalf("query db error, %v", err)
+    }
+    defer rows.Close()
+
+    var id int64
+    var name string
+    for rows.Next() {
+        rows.Scan(
+            &id,
+            &name,
+        )
+        t.Logf("query db, id: %d, name: %s", id, name)
+    }
+    err = rows.Err()
+    if err != nil {
+        t.Fatalf("query db error, %v", err)
+    }
 }
