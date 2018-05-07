@@ -8,6 +8,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/golang/snappy"
+  packages = ["."]
+  revision = "553a641470496b2327abcac10b36396bd98e45c9"
+
+[[projects]]
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
@@ -28,6 +34,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f02013496f2fdf5b1cb34388538dca9ad6c4975eac8174fcb895f8590a2bc0ed"
+  inputs-digest = "5e4d48ee8190fe53c34494464fcdbbaebaa06d1abbd0ea12a2427dab7b957f0a"
   solver-name = "gps-cdcl"
   solver-version = 1
