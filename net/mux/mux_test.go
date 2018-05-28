@@ -48,6 +48,24 @@ func runEchoSvr(ln net.Listener) {
 	}()
 }
 
+func runTcpSvr(ln net.Listener, respContent string) {
+	go func() {
+		for {
+			conn, err := ln.Accept()
+			if err != nil {
+				return
+			}
+			rd := bufio.NewReader(conn)
+			_, err = rd.ReadString('\n')
+			if err != nil {
+				return
+			}
+			conn.Write([]byte(respContent))
+			conn.Close()
+		}
+	}()
+}
+
 func TestMux(t *testing.T) {
 	assert := assert.New(t)
 
@@ -92,4 +110,81 @@ func TestMux(t *testing.T) {
 	n, err := conn.Read(data)
 	assert.NoError(err)
 	assert.Equal("test echo\n", string(data[:n]))
+}
+
+func TestMuxPriority(t *testing.T) {
+	assert := assert.New(t)
+
+	ln, err := net.Listen("tcp", "127.0.0.1:")
+	assert.NoError(err)
+
+	mux := NewMux()
+	ln1 := mux.Listen(0, 2, func(data []byte) bool {
+		if data[0] == '1' {
+			return true
+		} else {
+			return false
+		}
+	})
+	ln2 := mux.Listen(1, 2, func(data []byte) bool {
+		if data[0] == '1' {
+			return true
+		} else {
+			return false
+		}
+	})
+	runTcpSvr(ln1, "aaa")
+	runTcpSvr(ln2, "bbb")
+	go mux.Serve(ln)
+	time.Sleep(100 * time.Millisecond)
+
+	// priority 0, '1' -> 'aaa'
+	// priority 1, '1' -> 'bbb'
+	conn, err := net.Dial("tcp", ln.Addr().String())
+	assert.NoError(err)
+	_, err = conn.Write([]byte("111\n"))
+	assert.NoError(err)
+	data := make([]byte, 1024)
+	n, err := conn.Read(data)
+	assert.NoError(err)
+	assert.Equal("aaa", string(data[:n]))
+
+	// No match
+	ln1.Close()
+	ln2.Close()
+	conn, err = net.Dial("tcp", ln.Addr().String())
+	assert.NoError(err)
+	_, err = conn.Write([]byte("111\n"))
+	assert.NoError(err)
+	data = make([]byte, 1024)
+	_, err = conn.Read(data)
+	assert.Error(err)
+
+	// priority 0, '1' -> 'bbb'
+	// priority 1, '1' -> 'aaa'
+	ln1 = mux.Listen(0, 2, func(data []byte) bool {
+		if data[0] == '1' {
+			return true
+		} else {
+			return false
+		}
+	})
+	ln2 = mux.Listen(1, 2, func(data []byte) bool {
+		if data[0] == '2' {
+			return true
+		} else {
+			return false
+		}
+	})
+	runTcpSvr(ln2, "aaa")
+	runTcpSvr(ln1, "bbb")
+
+	conn, err = net.Dial("tcp", ln.Addr().String())
+	assert.NoError(err)
+	_, err = conn.Write([]byte("111\n"))
+	assert.NoError(err)
+	data = make([]byte, 1024)
+	n, err = conn.Read(data)
+	assert.NoError(err)
+	assert.Equal("bbb", string(data[:n]))
 }
