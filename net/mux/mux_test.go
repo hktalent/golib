@@ -72,11 +72,11 @@ func TestMux(t *testing.T) {
 	ln, err := net.Listen("tcp", "127.0.0.1:")
 	assert.NoError(err)
 
-	mux := NewMux()
+	mux := NewMux(ln)
 	httpLn := mux.ListenHttp(0)
 	httpsLn := mux.ListenHttps(0)
 	defaultLn := mux.DefaultListener()
-	go mux.Serve(ln)
+	go mux.Serve()
 	time.Sleep(100 * time.Millisecond)
 
 	httpSvr := runHttpSvr(httpLn)
@@ -118,7 +118,7 @@ func TestMuxPriority(t *testing.T) {
 	ln, err := net.Listen("tcp", "127.0.0.1:")
 	assert.NoError(err)
 
-	mux := NewMux()
+	mux := NewMux(ln)
 	ln1 := mux.Listen(0, 2, func(data []byte) bool {
 		if data[0] == '1' {
 			return true
@@ -135,7 +135,7 @@ func TestMuxPriority(t *testing.T) {
 	})
 	runTcpSvr(ln1, "aaa")
 	runTcpSvr(ln2, "bbb")
-	go mux.Serve(ln)
+	go mux.Serve()
 	time.Sleep(100 * time.Millisecond)
 
 	// priority 0, '1' -> 'aaa'
