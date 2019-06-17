@@ -1,4 +1,4 @@
-module github.com/fatedier/golib
+module github.com/hktalent/golib
 
 go 1.12
 
