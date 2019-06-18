@@ -1,4 +1,4 @@
-// Copyright 2018 fatedier, fatedier@gmail.com
+// Copyright 2018 hktalent, hktalent@gmail.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fatedier/golib/errors"
-	gnet "github.com/fatedier/golib/net"
+	"github.com/hktalent/golib/errors"
+	gnet "github.com/hktalent/golib/net"
 )
 
 const (
